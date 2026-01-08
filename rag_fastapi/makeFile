@@ -1,0 +1,95 @@
+.PHONY: install setup dev run test clean build docker-up docker-down docker-build lint format
+
+# Variables
+VENV_DIR := venv
+PYTHON := $(VENV_DIR)/bin/python
+PIP := $(VENV_DIR)/bin/pip
+UVICORN := $(VENV_DIR)/bin/uvicorn
+PYTEST := $(VENV_DIR)/bin/pytest
+CELERY := $(VENV_DIR)/bin/celery
+DOCKER_COMPOSE := docker-compose
+APP_DIR := app
+
+# Default target
+all: setup run
+
+# Setup virtual environment and install dependencies
+setup:
+	@echo "Setting up virtual environment and installing dependencies..."
+	python3 -m venv $(VENV_DIR)
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
+	@echo "Setup complete."
+
+# Activate virtual environment (for manual use)
+# To use: source venv/bin/activate
+dev: setup
+	@echo "Development environment ready. Run 'source $(VENV_DIR)/bin/activate' to activate."
+
+# Run the FastAPI application locally
+run:
+	@echo "Running FastAPI application locally..."
+	$(UVICORN) $(APP_DIR).main:app --host 0.0.0.0 --port 8000 --reload
+
+# Run tests
+test:
+	@echo "Running tests..."
+	$(PYTEST) tests/
+
+# Clean compiled Python files and cache
+clean:
+	@echo "Cleaning up..."
+	find . -type f -name "*.pyc" -delete
+	find . -type d -name "__pycache__" -delete
+	find . -type d -name ".pytest_cache" -delete
+	find . -type d -name ".vector_store" -exec rm -rf {} +
+	find . -type d -name ".document_store" -exec rm -rf {} +
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	rm -f .coverage
+	rm -rf $(VENV_DIR)
+	@echo "Cleanup complete."
+
+# Docker targets
+docker-build:
+	@echo "Building Docker images..."
+	$(DOCKER_COMPOSE) build
+
+docker-up:
+	@echo "Starting Docker services..."
+	$(DOCKER_COMPOSE) up -d
+
+docker-down:
+	@echo "Stopping and removing Docker services..."
+	$(DOCKER_COMPOSE) down
+
+docker-logs:
+	@echo "Showing Docker logs..."
+	$(DOCKER_COMPOSE) logs -f
+
+docker-restart:
+	@echo "Restarting Docker services..."
+	$(DOCKER_COMPOSE) restart
+
+# Celery worker (run in a separate terminal or Docker)
+worker:
+	@echo "Running Celery worker..."
+	$(CELERY) -A $(APP_DIR).background.celery_worker.celery worker --loglevel=info
+
+# Celery beat (for scheduled tasks, not used in this example but good to have)
+beat:
+	@echo "Running Celery beat..."
+	$(CELERY) -A $(APP_DIR).background.celery_worker.celery beat --loglevel=info
+
+# Linting and Formatting (Add ruff, black if used)
+lint:
+	@echo "Running linter (ruff)..."
+	$(VENV_DIR)/bin/ruff check .
+
+format:
+	@echo "Running formatter (black)..."
+	$(VENV_DIR)/bin/black .
+
+# Evaluation script
+evaluate:
+	@echo "Running evaluation script..."
+	$(PYTHON) evaluation/run_evaluation.py

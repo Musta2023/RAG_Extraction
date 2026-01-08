@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./evaluation:/app/evaluation
+      - ./logs:/app/logs
+      - ./.vector_store:/app/.vector_store
+      - ./.document_store:/app/.document_store
+      - sentence_transformer_cache:/root/.cache/torch/sentence_transformers # Add this line
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  worker:
+    build: .
+    command: ["/wait-for-redis.sh", "redis", "celery", "-A", "app.background.celery_worker.celery", "worker", "--loglevel=info"]
+    volumes:
+      - ./app:/app/app
+      - ./evaluation:/app/evaluation
+      - ./logs:/app/logs
+      - ./.vector_store:/app/.vector_store
+      - ./.document_store:/app/.document_store
+      - sentence_transformer_cache:/root/.cache/torch/sentence_transformers # Add this line
+    env_file:
+      - ./.env
+    environment: # Added environment block
+      - GEMINI_API_KEY=${GEMINI_API_KEY} # Explicitly pass API key
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A app.background.celery_worker.celery beat -l info
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+    volumes: # ADDED: Volume mounts for code changes and logs
+      - ./app:/app/app
+      - ./logs:/app/logs
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+  sentence_transformer_cache: # Add this line

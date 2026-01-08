@@ -1,0 +1,72 @@
+[
+    {
+        "question": "What company did Paul Graham discuss in 'Beating the Averages'?",
+        "expected_answer_keywords": [
+            "Viaweb"
+        ],
+        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "confidence": "low",
+        "citations_count": 0,
+        "citation_urls": [],
+        "grounding_notes": "No relevant documents were retrieved.",
+        "evaluation_notes": [
+            "Missing expected keywords: Viaweb",
+            "Warning: Answer provided but no citations found."
+        ]
+    },
+    {
+        "question": "What programming language did Viaweb use, and why was it considered powerful?",
+        "expected_answer_keywords": [
+            "Lisp",
+            "powerful",
+            "macros",
+            "features faster"
+        ],
+        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "confidence": "low",
+        "citations_count": 0,
+        "citation_urls": [],
+        "grounding_notes": "No relevant documents were retrieved.",
+        "evaluation_notes": [
+            "Missing expected keywords: Lisp, powerful, macros, features faster",
+            "Warning: Answer provided but no citations found."
+        ]
+    },
+    {
+        "question": "Explain the 'Blub paradox' as described by Paul Graham.",
+        "expected_answer_keywords": [
+            "Blub paradox",
+            "languages",
+            "powerful",
+            "perceive advantages"
+        ],
+        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "confidence": "low",
+        "citations_count": 0,
+        "citation_urls": [],
+        "grounding_notes": "No relevant documents were retrieved.",
+        "evaluation_notes": [
+            "Missing expected keywords: Blub paradox, languages, powerful, perceive advantages",
+            "Warning: Answer provided but no citations found."
+        ]
+    },
+    {
+        "question": "How can using a powerful language like Lisp be a 'secret weapon' for startups?",
+        "expected_answer_keywords": [
+            "secret weapon",
+            "startups",
+            "Lisp",
+            "competitors",
+            "advantages"
+        ],
+        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "confidence": "low",
+        "citations_count": 0,
+        "citation_urls": [],
+        "grounding_notes": "No relevant documents were retrieved.",
+        "evaluation_notes": [
+            "Missing expected keywords: secret weapon, startups, Lisp, competitors, advantages",
+            "Warning: Answer provided but no citations found."
+        ]
+    }
+]

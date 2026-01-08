@@ -1,0 +1,51 @@
+# Core FastAPI and server
+fastapi
+uvicorn[standard]
+python-dotenv
+python-multipart
+pydantic
+
+# API utilities
+pydantic-settings
+
+# Background tasks
+celery
+redis
+redlock-py
+
+# RAG Pipeline
+# Fetching
+httpx[http2]
+# Cleaning and Chunking
+beautifulsoup4
+readability-lxml
+lxml
+html5lib
+# Embedding (choose one or more)
+sentence-transformers # For local embeddings
+ctransformers # For local generation
+openai
+google-genai
+
+# Vector Store
+faiss-cpu # For CPU-based FAISS. For GPU, use faiss-gpu
+numpy
+scikit-learn # Often a dependency for sentence-transformers or other ML libs
+
+# Logging
+structlog
+loguru # User requested
+
+# Utilities
+tiktoken # for token counting
+
+# Testing
+pytest
+pytest-cov
+pytest-asyncio # Explicitly added
+requests
+
+# Development Tools
+black
+isort
+flake8

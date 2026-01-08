@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What company did Paul Graham discuss in 'Beating the Averages'?",
+    "expected_answer_keywords": ["Viaweb"],
+    "notes": "Question directly from the essay's content."
+  },
+  {
+    "question": "What programming language did Viaweb use, and why was it considered powerful?",
+    "expected_answer_keywords": ["Lisp", "powerful", "macros", "features faster"],
+    "notes": "Question about the technical aspects discussed."
+  },
+  {
+    "question": "Explain the 'Blub paradox' as described by Paul Graham.",
+    "expected_answer_keywords": ["Blub paradox", "languages", "powerful", "perceive advantages"],
+    "notes": "Question about a key concept in the essay."
+  },
+  {
+    "question": "How can using a powerful language like Lisp be a 'secret weapon' for startups?",
+    "expected_answer_keywords": ["secret weapon", "startups", "Lisp", "competitors", "advantages"],
+    "notes": "Question about the strategic implications."
+  }
+]
