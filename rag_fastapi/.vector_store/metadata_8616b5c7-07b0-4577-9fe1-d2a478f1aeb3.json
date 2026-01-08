@@ -1,6 +1,6 @@
 {
-    "quotes.toscrape.com-98d82e22-0": {
-        "chunk_id": "quotes.toscrape.com-98d82e22-0",
+    "quotes.toscrape.com-25983dd4-0": {
+        "chunk_id": "quotes.toscrape.com-25983dd4-0",
         "document_url": "http://quotes.toscrape.com/",
         "document_title": null,
         "text_content": "“The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.” by Albert Einstein (about) “It is our choices, Harry, that show what we truly are, far more than our abilities.” by J.K. Rowling (about) “There are only two ways to live your life. One is as though nothing is a miracle.",
@@ -394,11 +394,11 @@
         ],
         "metadata": {
             "source": "http://quotes.toscrape.com/",
-            "fetch_timestamp": "2026-01-08T11:23:52.502588"
+            "fetch_timestamp": "2026-01-08T13:55:26.243794"
         }
     },
-    "quotes.toscrape.com-664f354c-1": {
-        "chunk_id": "quotes.toscrape.com-664f354c-1",
+    "quotes.toscrape.com-0cd4b22a-1": {
+        "chunk_id": "quotes.toscrape.com-0cd4b22a-1",
         "document_url": "http://quotes.toscrape.com/",
         "document_title": null,
         "text_content": "One is as though nothing is a miracle. The other is as though everything is a miracle.” by Albert Einstein (about) “The person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.” by Jane Austen (about) “Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.” by Marilyn Monroe (about) “Try not to become a man of success.",
@@ -792,11 +792,11 @@
         ],
         "metadata": {
             "source": "http://quotes.toscrape.com/",
-            "fetch_timestamp": "2026-01-08T11:23:52.502588"
+            "fetch_timestamp": "2026-01-08T13:55:26.243794"
         }
     },
-    "quotes.toscrape.com-aaa07e85-2": {
-        "chunk_id": "quotes.toscrape.com-aaa07e85-2",
+    "quotes.toscrape.com-a7964831-2": {
+        "chunk_id": "quotes.toscrape.com-a7964831-2",
         "document_url": "http://quotes.toscrape.com/",
         "document_title": null,
         "text_content": "Rather become a man of value.” by Albert Einstein (about) “It is better to be hated for what you are than to be loved for what you are not.” by André Gide (about) “I have not failed. I've just found 10,000 ways that won't work.” by Thomas A. Edison (about) “A woman is like a tea bag; you never know how strong it is until it's in hot water.” by Eleanor Roosevelt (about) “A day without sunshine is like, you know, night.” by Steve Martin (about)",
@@ -1190,7 +1190,7 @@
         ],
         "metadata": {
             "source": "http://quotes.toscrape.com/",
-            "fetch_timestamp": "2026-01-08T11:23:52.502588"
+            "fetch_timestamp": "2026-01-08T13:55:26.243794"
         }
     }
 }

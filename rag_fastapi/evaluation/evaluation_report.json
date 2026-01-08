@@ -4,11 +4,11 @@
         "expected_answer_keywords": [
             "Viaweb"
         ],
-        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "response_answer": "An error occurred while generating the answer.",
         "confidence": "low",
         "citations_count": 0,
         "citation_urls": [],
-        "grounding_notes": "No relevant documents were retrieved.",
+        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
         "evaluation_notes": [
             "Missing expected keywords: Viaweb",
             "Warning: Answer provided but no citations found."
@@ -22,11 +22,11 @@
             "macros",
             "features faster"
         ],
-        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "response_answer": "An error occurred while generating the answer.",
         "confidence": "low",
         "citations_count": 0,
         "citation_urls": [],
-        "grounding_notes": "No relevant documents were retrieved.",
+        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
         "evaluation_notes": [
             "Missing expected keywords: Lisp, powerful, macros, features faster",
             "Warning: Answer provided but no citations found."
@@ -40,11 +40,11 @@
             "powerful",
             "perceive advantages"
         ],
-        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "response_answer": "An error occurred while generating the answer.",
         "confidence": "low",
         "citations_count": 0,
         "citation_urls": [],
-        "grounding_notes": "No relevant documents were retrieved.",
+        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
         "evaluation_notes": [
             "Missing expected keywords: Blub paradox, languages, powerful, perceive advantages",
             "Warning: Answer provided but no citations found."
@@ -59,11 +59,11 @@
             "competitors",
             "advantages"
         ],
-        "response_answer": "I cannot answer this question as no relevant information was found.",
+        "response_answer": "An error occurred while generating the answer.",
         "confidence": "low",
         "citations_count": 0,
         "citation_urls": [],
-        "grounding_notes": "No relevant documents were retrieved.",
+        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
         "evaluation_notes": [
             "Missing expected keywords: secret weapon, startups, Lisp, competitors, advantages",
             "Warning: Answer provided but no citations found."

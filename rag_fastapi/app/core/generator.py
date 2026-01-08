@@ -70,7 +70,7 @@ class BaseGenerator(object):
             return "low"
     
     @abstractmethod
-    def generate_answer(
+    async def generate_answer(
         self,
         question: str,
         retrieved_chunks: List[Tuple[float, DocumentChunk]],
@@ -100,7 +100,7 @@ class OpenAIGenerator(BaseGenerator):
         self.model = settings.OPENAI_GENERATION_MODEL
         logger.info(f"Initialized OpenAIGenerator with model: {self.model}")
 
-    def generate_answer(
+    async def generate_answer(
         self,
         question: str,
         retrieved_chunks: List[Tuple[float, DocumentChunk]],
@@ -177,15 +177,17 @@ class GeminiGenerator(BaseGenerator):
                 "The 'google-genai' package is not installed. "
                 "Please install it with 'pip install google-genai'"
             )
-        if not settings.GEMINI_API_KEY or settings.GEMINI_API_KEY == "your_gemini_api_key":
+        self.genai = genai # Store the module for use in generate_answer
+        self.api_key = settings.GEMINI_API_KEY
+        self.model_name = settings.GEMINI_GENERATION_MODEL
+
+        if not self.api_key or self.api_key == "your_gemini_api_key":
             logger.error("Gemini API key is not set. Cannot initialize Gemini Generator.")
-            self.model = None
+            self.model_name = None # Set to None to prevent usage
         else:
-            self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
-            self.model_name = settings.GEMINI_GENERATION_MODEL
             logger.info(f"Initialized GeminiGenerator with model: {self.model_name}")
 
-    def generate_answer(
+    async def generate_answer(
         self,
         question: str,
         retrieved_chunks: List[Tuple[float, DocumentChunk]],
@@ -221,8 +223,13 @@ class GeminiGenerator(BaseGenerator):
         ]
 
         try:
-            model_instance = self.client.get_model(self.model_name)
-            response = model_instance.generate_content(messages, safety_settings={'HARASSMENT': 'BLOCK_NONE'})
+            # Explicitly create client and close it in finally block
+            client = self.genai.Client(api_key=self.api_key)
+            try:
+                model_instance = client.get_model(self.model_name)
+                response = await model_instance.generate_content(messages, safety_settings={'HARASSMENT': 'BLOCK_NONE'})
+            finally:
+                await client.close()
             
             answer_text = response.text.strip()
             
@@ -265,7 +272,7 @@ class Generator:
             raise ValueError(f"Unsupported LLM_PROVIDER for generation: {settings.LLM_PROVIDER}")
         logger.info(f"Active Generator: {provider}")
 
-    def generate_answer(
+    async def generate_answer(
         self,
         question: str,
         retrieved_chunks: List[Tuple[float, DocumentChunk]],
@@ -273,4 +280,4 @@ class Generator:
     ) -> Dict[str, Any]:
         if not self._generator_instance:
             self._initialize_generator() # Try to re-initialize if it somehow became None
-        return self._generator_instance.generate_answer(question, retrieved_chunks, job_id)
+        return await self._generator_instance.generate_answer(question, retrieved_chunks, job_id)

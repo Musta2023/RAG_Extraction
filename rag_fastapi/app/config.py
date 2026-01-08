@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     OPENAI_GENERATION_MODEL: str = "gpt-3.5-turbo"
 
     # Gemini
-    GEMINI_API_KEY: str = "AIzaSyDk4AyWdT63pPpcdA3uiwItRTvVtg7SPec"
+    GEMINI_API_KEY: str = "your_gemini_api_key"
     GEMINI_EMBEDDING_MODEL: str = "models/embedding-001"
     GEMINI_GENERATION_MODEL: str = "models/gemini-pro"
 

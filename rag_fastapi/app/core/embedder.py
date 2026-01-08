@@ -134,6 +134,10 @@ class LocalSentenceTransformerEmbedder(BaseEmbedder):
             # Generate embeddings (returns numpy array by default)
             embeddings = self.model.encode(texts, convert_to_numpy=True)
             
+            # Log a sample of the first embedding for debugging
+            if embeddings.size > 0:
+                logger.debug(f"Sample of first document embedding: {embeddings[0][:5]}")
+
             # CRITICAL FIX: Convert Numpy array to Python List of Lists.
             # This converts np.float32 to standard Python floats, 
             # which passes your validation and works with FAISS/JSON.
@@ -155,6 +159,7 @@ class LocalSentenceTransformerEmbedder(BaseEmbedder):
     def embed_query(self, text: str) -> List[float]:
         try:
             embedding = self.model.encode(text, convert_to_numpy=True)
+            logger.debug(f"Sample of query embedding: {embedding[:5]}")
             return embedding.tolist()
         except Exception as e:
             logger.error(f"Local Query error: {e}")

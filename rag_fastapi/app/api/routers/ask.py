@@ -45,7 +45,7 @@ async def ask_question(request: AskRequest):
         retrieved_chunks = retriever.retrieve_chunks(request.job_id, request.question, k=settings.RETRIEVER_TOP_K)
         
         # Step 2: Generate answer
-        answer_data = generator.generate_answer(request.question, retrieved_chunks, request.job_id)
+        answer_data = await generator.generate_answer(request.question, retrieved_chunks, request.job_id)
         
         return AskResponse(
             answer=answer_data["answer"],

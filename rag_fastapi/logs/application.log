@@ -1,0 +1,281 @@
+Application startup...
+Application startup...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Incoming request: POST /api/ingest
+Job bfd413dd-8e23-46b1-a221-42e223da110c created and stored in Redis.
+Ingestion job bfd413dd-8e23-46b1-a221-42e223da110c initiated for URLs: [HttpUrl('http://quotes.toscrape.com/')]...
+Request finished: POST /api/ingest with status 202 in 0.0535s
+Incoming request: GET /api/status/bfd413dd-8e23-46b1-a221-42e223da110c
+Retrieved status for job bfd413dd-8e23-46b1-a221-42e223da110c: completed
+Request finished: GET /api/status/bfd413dd-8e23-46b1-a221-42e223da110c with status 200 in 0.0148s
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0095s
+Incoming request: POST /api/ingest
+Job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e created and stored in Redis.
+Ingestion job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0074s
+Incoming request: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e
+Retrieved status for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e: pending
+Request finished: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e with status 200 in 0.0036s
+Incoming request: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e
+Retrieved status for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e: pending
+Request finished: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e with status 200 in 0.0028s
+Incoming request: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e
+Retrieved status for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e: pending
+Request finished: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e with status 200 in 0.0036s
+Incoming request: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e
+Retrieved status for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e: completed
+Request finished: GET /api/status/3d0f8005-940c-4bcc-b4d7-e8b567f4582e with status 200 in 0.0025s
+Incoming request: POST /api/ask
+Received ask request for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e, question: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Retrieving top 5 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e with query: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+No index found for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e. Cannot perform search.
+Retrieved 0 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e.
+Request finished: POST /api/ask with status 200 in 0.0958s
+Incoming request: POST /api/ask
+Received ask request for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e, question: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieving top 5 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e with query: 'What programming language did Viaweb use, and why was it considered powerful?'
+No index found for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e. Cannot perform search.
+Retrieved 0 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e.
+Request finished: POST /api/ask with status 200 in 0.0205s
+Incoming request: POST /api/ask
+Received ask request for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e, question: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieving top 5 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e with query: 'Explain the 'Blub paradox' as described by Paul Graham.'
+No index found for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e. Cannot perform search.
+Retrieved 0 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e.
+Request finished: POST /api/ask with status 200 in 0.0269s
+Incoming request: POST /api/ask
+Received ask request for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e, question: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieving top 5 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e with query: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+No index found for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e. Cannot perform search.
+Retrieved 0 chunks for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e.
+Request finished: POST /api/ask with status 200 in 0.0297s
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Application startup...
+Application shutdown...
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0069s
+Incoming request: POST /api/ingest
+Job e03f3e96-863e-4759-b982-983e873e1136 created and stored in Redis.
+Ingestion job e03f3e96-863e-4759-b982-983e873e1136 initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0871s
+Incoming request: GET /api/status/e03f3e96-863e-4759-b982-983e873e1136
+Retrieved status for job e03f3e96-863e-4759-b982-983e873e1136: pending
+Request finished: GET /api/status/e03f3e96-863e-4759-b982-983e873e1136 with status 200 in 0.0301s
+Incoming request: GET /api/status/e03f3e96-863e-4759-b982-983e873e1136
+Retrieved status for job e03f3e96-863e-4759-b982-983e873e1136: crawling
+Request finished: GET /api/status/e03f3e96-863e-4759-b982-983e873e1136 with status 200 in 107.6212s
+Incoming request: GET /api/status/e03f3e96-863e-4759-b982-983e873e1136
+Retrieved status for job e03f3e96-863e-4759-b982-983e873e1136: completed
+Request finished: GET /api/status/e03f3e96-863e-4759-b982-983e873e1136 with status 200 in 0.0034s
+Incoming request: POST /api/ask
+Received ask request for job e03f3e96-863e-4759-b982-983e873e1136, question: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Retrieving top 5 chunks for job e03f3e96-863e-4759-b982-983e873e1136 with query: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+No index found for job e03f3e96-863e-4759-b982-983e873e1136. Cannot perform search.
+Retrieved 0 chunks for job e03f3e96-863e-4759-b982-983e873e1136.
+Request finished: POST /api/ask with status 200 in 0.0420s
+Incoming request: POST /api/ask
+Received ask request for job e03f3e96-863e-4759-b982-983e873e1136, question: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieving top 5 chunks for job e03f3e96-863e-4759-b982-983e873e1136 with query: 'What programming language did Viaweb use, and why was it considered powerful?'
+No index found for job e03f3e96-863e-4759-b982-983e873e1136. Cannot perform search.
+Retrieved 0 chunks for job e03f3e96-863e-4759-b982-983e873e1136.
+Request finished: POST /api/ask with status 200 in 0.0244s
+Incoming request: POST /api/ask
+Received ask request for job e03f3e96-863e-4759-b982-983e873e1136, question: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieving top 5 chunks for job e03f3e96-863e-4759-b982-983e873e1136 with query: 'Explain the 'Blub paradox' as described by Paul Graham.'
+No index found for job e03f3e96-863e-4759-b982-983e873e1136. Cannot perform search.
+Retrieved 0 chunks for job e03f3e96-863e-4759-b982-983e873e1136.
+Request finished: POST /api/ask with status 200 in -107.5791s
+Incoming request: POST /api/ask
+Received ask request for job e03f3e96-863e-4759-b982-983e873e1136, question: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieving top 5 chunks for job e03f3e96-863e-4759-b982-983e873e1136 with query: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+No index found for job e03f3e96-863e-4759-b982-983e873e1136. Cannot perform search.
+Retrieved 0 chunks for job e03f3e96-863e-4759-b982-983e873e1136.
+Request finished: POST /api/ask with status 200 in 0.0219s
+Application shutdown...
+Application startup...
+Application shutdown...
+Application startup...
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0098s
+Incoming request: POST /api/ingest
+Job 0cce2a51-a07a-4df6-9348-d181ff7251ec created and stored in Redis.
+Ingestion job 0cce2a51-a07a-4df6-9348-d181ff7251ec initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0555s
+Incoming request: GET /api/status/0cce2a51-a07a-4df6-9348-d181ff7251ec
+Retrieved status for job 0cce2a51-a07a-4df6-9348-d181ff7251ec: pending
+Request finished: GET /api/status/0cce2a51-a07a-4df6-9348-d181ff7251ec with status 200 in 0.0130s
+Incoming request: GET /api/status/0cce2a51-a07a-4df6-9348-d181ff7251ec
+Retrieved status for job 0cce2a51-a07a-4df6-9348-d181ff7251ec: failed
+Request finished: GET /api/status/0cce2a51-a07a-4df6-9348-d181ff7251ec with status 200 in 0.0043s
+Application shutdown...
+Application startup...
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0137s
+Incoming request: POST /api/ingest
+Job a1322b07-ab75-43b0-87c6-3bb09d0c605e created and stored in Redis.
+Ingestion job a1322b07-ab75-43b0-87c6-3bb09d0c605e initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0631s
+Incoming request: GET /api/status/a1322b07-ab75-43b0-87c6-3bb09d0c605e
+Retrieved status for job a1322b07-ab75-43b0-87c6-3bb09d0c605e: pending
+Request finished: GET /api/status/a1322b07-ab75-43b0-87c6-3bb09d0c605e with status 200 in 0.0153s
+Incoming request: GET /api/status/a1322b07-ab75-43b0-87c6-3bb09d0c605e
+Retrieved status for job a1322b07-ab75-43b0-87c6-3bb09d0c605e: crawling
+Request finished: GET /api/status/a1322b07-ab75-43b0-87c6-3bb09d0c605e with status 200 in 0.0051s
+Incoming request: GET /api/status/a1322b07-ab75-43b0-87c6-3bb09d0c605e
+Retrieved status for job a1322b07-ab75-43b0-87c6-3bb09d0c605e: completed
+Request finished: GET /api/status/a1322b07-ab75-43b0-87c6-3bb09d0c605e with status 200 in 0.0064s
+Incoming request: POST /api/ask
+Received ask request for job a1322b07-ab75-43b0-87c6-3bb09d0c605e, question: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Retrieving top 5 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e with query: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+No index found for job a1322b07-ab75-43b0-87c6-3bb09d0c605e. Cannot perform search.
+Retrieved 0 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e.
+Request finished: POST /api/ask with status 200 in 0.0332s
+Incoming request: POST /api/ask
+Received ask request for job a1322b07-ab75-43b0-87c6-3bb09d0c605e, question: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieving top 5 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e with query: 'What programming language did Viaweb use, and why was it considered powerful?'
+No index found for job a1322b07-ab75-43b0-87c6-3bb09d0c605e. Cannot perform search.
+Retrieved 0 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e.
+Request finished: POST /api/ask with status 200 in 0.0178s
+Incoming request: POST /api/ask
+Received ask request for job a1322b07-ab75-43b0-87c6-3bb09d0c605e, question: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieving top 5 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e with query: 'Explain the 'Blub paradox' as described by Paul Graham.'
+No index found for job a1322b07-ab75-43b0-87c6-3bb09d0c605e. Cannot perform search.
+Retrieved 0 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e.
+Request finished: POST /api/ask with status 200 in 0.0231s
+Incoming request: POST /api/ask
+Received ask request for job a1322b07-ab75-43b0-87c6-3bb09d0c605e, question: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieving top 5 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e with query: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+No index found for job a1322b07-ab75-43b0-87c6-3bb09d0c605e. Cannot perform search.
+Retrieved 0 chunks for job a1322b07-ab75-43b0-87c6-3bb09d0c605e.
+Request finished: POST /api/ask with status 200 in 0.0233s
+Application shutdown...
+Application startup...
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0082s
+Incoming request: POST /api/ingest
+Job ead1ca3d-b690-4fa8-940d-b09dbfed0bd4 created and stored in Redis.
+Ingestion job ead1ca3d-b690-4fa8-940d-b09dbfed0bd4 initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0442s
+Incoming request: GET /api/status/ead1ca3d-b690-4fa8-940d-b09dbfed0bd4
+Retrieved status for job ead1ca3d-b690-4fa8-940d-b09dbfed0bd4: pending
+Request finished: GET /api/status/ead1ca3d-b690-4fa8-940d-b09dbfed0bd4 with status 200 in 0.0118s
+Incoming request: GET /api/status/ead1ca3d-b690-4fa8-940d-b09dbfed0bd4
+Retrieved status for job ead1ca3d-b690-4fa8-940d-b09dbfed0bd4: failed
+Request finished: GET /api/status/ead1ca3d-b690-4fa8-940d-b09dbfed0bd4 with status 200 in 0.0051s
+Application shutdown...
+Application startup...
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0101s
+Incoming request: POST /api/ingest
+Job fb39b041-e816-4d95-9e51-221c6cceccb3 created and stored in Redis.
+Ingestion job fb39b041-e816-4d95-9e51-221c6cceccb3 initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0469s
+Incoming request: GET /api/status/fb39b041-e816-4d95-9e51-221c6cceccb3
+Retrieved status for job fb39b041-e816-4d95-9e51-221c6cceccb3: pending
+Request finished: GET /api/status/fb39b041-e816-4d95-9e51-221c6cceccb3 with status 200 in 0.0146s
+Incoming request: GET /api/status/fb39b041-e816-4d95-9e51-221c6cceccb3
+Retrieved status for job fb39b041-e816-4d95-9e51-221c6cceccb3: crawling
+Request finished: GET /api/status/fb39b041-e816-4d95-9e51-221c6cceccb3 with status 200 in 0.0037s
+Incoming request: GET /api/status/fb39b041-e816-4d95-9e51-221c6cceccb3
+Retrieved status for job fb39b041-e816-4d95-9e51-221c6cceccb3: completed
+Request finished: GET /api/status/fb39b041-e816-4d95-9e51-221c6cceccb3 with status 200 in 0.0040s
+Incoming request: POST /api/ask
+Received ask request for job fb39b041-e816-4d95-9e51-221c6cceccb3, question: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Retrieving top 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3 with query: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Index for job fb39b041-e816-4d95-9e51-221c6cceccb3 not found in memory. Attempting to reload all indexes from disk.
+Loaded FAISS index, metadata, and ID map for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e.
+Loaded FAISS index, metadata, and ID map for job a1322b07-ab75-43b0-87c6-3bb09d0c605e.
+Loaded FAISS index, metadata, and ID map for job bfd413dd-8e23-46b1-a221-42e223da110c.
+Loaded FAISS index, metadata, and ID map for job e03f3e96-863e-4759-b982-983e873e1136.
+Loaded FAISS index, metadata, and ID map for job fb39b041-e816-4d95-9e51-221c6cceccb3.
+Initialized VectorStore. Loaded 5 indexes.
+Retrieved 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3.
+Error generating answer with Gemini for job fb39b041-e816-4d95-9e51-221c6cceccb3, question 'What company did Paul Graham discuss in 'Beating the Averages'?': 'Client' object does not support the asynchronous context manager protocol
+Request finished: POST /api/ask with status 200 in 0.3114s
+Incoming request: POST /api/ask
+Received ask request for job fb39b041-e816-4d95-9e51-221c6cceccb3, question: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieving top 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3 with query: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieved 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3.
+Error generating answer with Gemini for job fb39b041-e816-4d95-9e51-221c6cceccb3, question 'What programming language did Viaweb use, and why was it considered powerful?': 'Client' object does not support the asynchronous context manager protocol
+Request finished: POST /api/ask with status 200 in 0.0848s
+Incoming request: POST /api/ask
+Received ask request for job fb39b041-e816-4d95-9e51-221c6cceccb3, question: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieving top 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3 with query: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieved 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3.
+Error generating answer with Gemini for job fb39b041-e816-4d95-9e51-221c6cceccb3, question 'Explain the 'Blub paradox' as described by Paul Graham.': 'Client' object does not support the asynchronous context manager protocol
+Request finished: POST /api/ask with status 200 in 0.0848s
+Incoming request: POST /api/ask
+Received ask request for job fb39b041-e816-4d95-9e51-221c6cceccb3, question: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieving top 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3 with query: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieved 5 chunks for job fb39b041-e816-4d95-9e51-221c6cceccb3.
+Error generating answer with Gemini for job fb39b041-e816-4d95-9e51-221c6cceccb3, question 'How can using a powerful language like Lisp be a 'secret weapon' for startups?': 'Client' object does not support the asynchronous context manager protocol
+Request finished: POST /api/ask with status 200 in 107.6947s
+Application shutdown...
+Application startup...
+Incoming request: GET /api/health
+Request finished: GET /api/health with status 200 in 0.0101s
+Incoming request: POST /api/ingest
+Job dd82aea3-9b91-4c73-ad75-b9887852bf8d created and stored in Redis.
+Ingestion job dd82aea3-9b91-4c73-ad75-b9887852bf8d initiated for URLs: [HttpUrl('https://www.paulgraham.com/avg.html')]...
+Request finished: POST /api/ingest with status 202 in 0.0454s
+Incoming request: GET /api/status/dd82aea3-9b91-4c73-ad75-b9887852bf8d
+Retrieved status for job dd82aea3-9b91-4c73-ad75-b9887852bf8d: pending
+Request finished: GET /api/status/dd82aea3-9b91-4c73-ad75-b9887852bf8d with status 200 in 0.0134s
+Incoming request: GET /api/status/dd82aea3-9b91-4c73-ad75-b9887852bf8d
+Retrieved status for job dd82aea3-9b91-4c73-ad75-b9887852bf8d: crawling
+Request finished: GET /api/status/dd82aea3-9b91-4c73-ad75-b9887852bf8d with status 200 in 0.0037s
+Incoming request: GET /api/status/dd82aea3-9b91-4c73-ad75-b9887852bf8d
+Retrieved status for job dd82aea3-9b91-4c73-ad75-b9887852bf8d: completed
+Request finished: GET /api/status/dd82aea3-9b91-4c73-ad75-b9887852bf8d with status 200 in 0.0057s
+Incoming request: POST /api/ask
+Received ask request for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Retrieving top 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d with query: 'What company did Paul Graham discuss in 'Beating the Averages'?'
+Index for job dd82aea3-9b91-4c73-ad75-b9887852bf8d not found in memory. Attempting to reload all indexes from disk.
+Loaded FAISS index, metadata, and ID map for job 3d0f8005-940c-4bcc-b4d7-e8b567f4582e.
+Loaded FAISS index, metadata, and ID map for job a1322b07-ab75-43b0-87c6-3bb09d0c605e.
+Loaded FAISS index, metadata, and ID map for job bfd413dd-8e23-46b1-a221-42e223da110c.
+Loaded FAISS index, metadata, and ID map for job dd82aea3-9b91-4c73-ad75-b9887852bf8d.
+Loaded FAISS index, metadata, and ID map for job e03f3e96-863e-4759-b982-983e873e1136.
+Loaded FAISS index, metadata, and ID map for job fb39b041-e816-4d95-9e51-221c6cceccb3.
+Initialized VectorStore. Loaded 6 indexes.
+Retrieved 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d.
+Error generating answer with Gemini for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question 'What company did Paul Graham discuss in 'Beating the Averages'?': object NoneType can't be used in 'await' expression
+Request finished: POST /api/ask with status 200 in 0.3001s
+Incoming request: POST /api/ask
+Received ask request for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieving top 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d with query: 'What programming language did Viaweb use, and why was it considered powerful?'
+Retrieved 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d.
+Error generating answer with Gemini for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question 'What programming language did Viaweb use, and why was it considered powerful?': object NoneType can't be used in 'await' expression
+Request finished: POST /api/ask with status 200 in 0.0791s
+Incoming request: POST /api/ask
+Received ask request for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieving top 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d with query: 'Explain the 'Blub paradox' as described by Paul Graham.'
+Retrieved 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d.
+Error generating answer with Gemini for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question 'Explain the 'Blub paradox' as described by Paul Graham.': object NoneType can't be used in 'await' expression
+Request finished: POST /api/ask with status 200 in 0.0864s
+Incoming request: POST /api/ask
+Received ask request for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieving top 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d with query: 'How can using a powerful language like Lisp be a 'secret weapon' for startups?'
+Retrieved 5 chunks for job dd82aea3-9b91-4c73-ad75-b9887852bf8d.
+Error generating answer with Gemini for job dd82aea3-9b91-4c73-ad75-b9887852bf8d, question 'How can using a powerful language like Lisp be a 'secret weapon' for startups?': object NoneType can't be used in 'await' expression
+Request finished: POST /api/ask with status 200 in 0.0945s
+Application shutdown...
