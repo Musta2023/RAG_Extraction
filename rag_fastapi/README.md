@@ -36,11 +36,13 @@ This project provides a complete, web-based Retrieval-Augmented Generation (RAG)
 
 ## Getting Started
 
+Follow these instructions to set up and run the RAG FastAPI application.
+
 ### Prerequisites
 
-- Docker and Docker Compose
-- Python 3.9+ (for local development)
-- An environment file (copy `.env.example` to `.env`)
+*   Docker and Docker Compose
+*   Python 3.9+ (for local development)
+*   An environment file (copy `.env.example` to `.env`)
 
 ### Installation & Running with Docker
 
@@ -52,7 +54,7 @@ This project provides a complete, web-based Retrieval-Augmented Generation (RAG)
 
 2.  **Configure your environment:**
     - Copy the example environment file: `cp .env.example .env`
-    - Edit the `.env` file to add your API keys (e.g., `OPENAI_API_KEY`) and adjust settings as needed.
+    - Edit the `.env` file to add your API keys (e.g., `OPENAI_API_KEY`, `GEMINI_API_KEY`) and adjust settings as needed.
 
 3.  **Build and run the services:**
     ```bash
@@ -75,7 +77,7 @@ This project provides a complete, web-based Retrieval-Augmented Generation (RAG)
 
 3.  **Configure your environment:**
     - Copy the example environment file: `cp .env.example .env`
-    - Edit the `.env` file.
+    - Edit the `.env` file to add your API keys (e.g., `OPENAI_API_KEY`, `GEMINI_API_KEY`) and adjust settings as needed.
 
 4.  **Run the application:**
     ```bash
@@ -171,14 +173,14 @@ The application is configured via environment variables defined in the `.env` fi
 
 | Variable                  | Description                                                              | Default              |
 | ------------------------- | ------------------------------------------------------------------------ | -------------------- |
-| `LLM_PROVIDER`            | The provider for embeddings and generation (`openai`, `gemini`, `local`).  | `openai`             |
+| `LLM_PROVIDER`            | The provider for embeddings and generation (`openai`, `gemini`, `ollama`, `huggingface`, `local`).  | ``             |
 | `OPENAI_API_KEY`          | Your OpenAI API key.                                                     | `your_openai_api_key`|
 | `OPENAI_EMBEDDING_MODEL`  | The model for generating embeddings.                                     | `text-embedding-3-small`|
 | `OPENAI_GENERATION_MODEL` | The model for generating answers.                                        | `gpt-3.5-turbo`      |
+| `GEMINI_API_KEY`          | Your Google Gemini API key.                                              | `your_gemini_api_key`|
 | `VECTOR_STORE_PATH`       | Directory to persist the FAISS index and related data.                   | `./.vector_store`    |
 | `CRAWLER_USER_AGENT`      | User agent string for the web crawler.                                   | (See `.env.example`) |
 | `RATE_LIMIT_REQUESTS`     | Number of requests allowed per `RATE_LIMIT_TIMESCALE`.                   | `100`                |
-| `RATE_LIMIT_TIMESCALE`    | Timescale for rate limiting (`minute`, `hour`).                          | `minute`             |
 
 
 ## Running Tests
@@ -187,45 +189,16 @@ To run the unit tests, use `pytest`:
 
 ```bash
 pytest
-=========================================================================================
-Sending ingest request to http://localhost:8000/api/ingest with payload: {'seed_urls':                                                                   │
-│ ['https://www.goodreads.com/quotes/tag/imagination?author=Albert-Einstein'], 'domain_allowlist': ['goodreads.com'], 'max_pages': 1, 'max_depth': 0,      │
-│ 'user_notes': 'Test for Albert Einstein quotes'}                                                                                                         │
-│ Ingest job started with ID: dd090e31-a640-47d8-a60a-9ecb28526e69                                                                                         │
-│ Polling job status at http://localhost:8000/api/status/dd090e31-a640-47d8-a60a-9ecb28526e69...                                                           │
-│ Job dd090e31-a640-47d8-a60a-9ecb28526e69 status: pending                                                                                                 │
-│ Job dd090e31-a640-47d8-a60a-9ecb28526e69 status: crawling                                                                                                │
-│ Job dd090e31-a640-47d8-a60a-9ecb28526e69 status: completed                                                                                               │
-│ Ingestion job dd090e31-a640-47d8-a60a-9ecb28526e69 completed.                                                                                            │
-│ Sending ask request to http://localhost:8000/api/ask with payload: {'job_id': 'dd090e31-a640-47d8-a60a-9ecb28526e69', 'question': 'What did Albert       │
-│ Einstein say about imagination?'}                                                                                                                        │
-│ Ask response: {                                                                                                                                          │
-│   "answer": "Albert Einstein said:\n\u201cLogic will get you from A to Z; imagination will get you everywhere.\u201d\n\"It is the preview of life's      │
-│ coming attractions.\u201d",                                                                                                                              │
-│   "confidence": "high",                                                                                                                                  │
-│   "citations": [                                                                                                                                         │
-│     {                                                                                                                                                    │
-│       "url": "https://www.goodreads.com/quotes/tag/imagination?author=Albert-Einstein",                                                                  │
-│       "title": null,                                                                                                                                     │
-│       "chunk_id": null,                                                                                                                                  │
-│       "quote": "\u201cEverything you can imagine is real.\u201d \u2015 Pablo Picasso \u201cLogic will get you from A to Z; imagination will get you      │
-│ everywhere.\u201d \u2015 Albert Einstein \u201cAnyone who lives within their means suffers from a lack of imagination.\u201d \u2015 Oscar Wilde          │
-│ \u201cYou never have to change anything you got up in the middle of the night to write.\u201d \u2015 Saul Bellow \u201cStories of imagination tend to    │
-│ upset those without one.\u201d \u2015 Terry Pratchett \u201cIf you are a dreamer come in If you are a dreamer a wisher a liar A hoper a pray-er a It is  │
-│ the preview of life's coming attractions.\u201d \u2015 Albert Einstein \u201cOur imagination flies -- we are its shadow on the earth.\u201d \u2015       │
-│ Vladimir Nabokov \u201cImagination does not become great until human beings, given the courage and the strength, use it to create.\u201d \u2015 Maria    │
-│ Montessori \u201cVision is the art of seeing things invisible.\u201d \u2015 Jonathan Swift \u201cImagination is the golden-eyed monster that never       │
-│ sleeps. It must be fed; it cannot be ignored.\u201d \u2015 Patricia A. I found out that the more I wrote, the bigger it got.\u201d \u2015 Philip         │
-│ Jos\u00e9 Farmer \u201cImagination is everything. Ballard \u201cImagination is the only weapon in the war against reality.\u201d \u2015 Lewis Carroll    │
-│ \u201cThere are painters who transform the sun to a yellow spot, but there are others who with the help of their art and their intelligence, transform a │
-│ yellow spot into sun\u201d \u2015 Pablo Picasso \u201cImagination will often carry us to worlds that never were, but without it we go nowhere.\u201d     │
-│ \u2015 Carl Sagan \u201cA fit, healthy body\u2014that is the best fashion statement\u201d \u2015 Jess C Scott McKillip \u201cI believe in the power of   │
-│ the imagination to remake the world, to release the truth within us, to hold back the night, to transcend death, to charm motorways, to ingratiate       │
-│ ourselves with birds, to enlist the confidences of madmen.\u201d \u2015 J.G.",                                                                           │
-│       "score": null                                                                                                                                      │
-│     }                                                                                                                                                    │
-│   ],                                                                                                                                                     │
-│   "grounding_notes": "Answer generated strictly from retrieved context."                                                                                 │
-│ }                                                                                                                                                        │
-│ RAG pipeline end-to-end test passed successfully!  
+```
+
+## Contributing
+We welcome contributions! Please see the [contributing guidelines](CONTRIBUTING.md) for details.
+
+## License
+
+This project is licensed under the MIT License.
+
+
+
+
 ```
