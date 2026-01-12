@@ -1,0 +1,44 @@
+# Ignore .git directory
+.git
+
+# Ignore Python cache directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Ignore editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.bak
+*.swo
+
+# Ignore environment files
+.env
+.env.example
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore data/cache directories
+.vector_store/
+.document_store/
+.cache/ # General cache directory
+
+# Ignore build artifacts
+dist/
+build/
+*.egg-info/
+
+# Ignore documentation and development files
+*.md
+Makefile
+pytest.ini
+setup.py
+htmlcov/
+.DS_Store
+
+# Ignore specific development-related files or directories

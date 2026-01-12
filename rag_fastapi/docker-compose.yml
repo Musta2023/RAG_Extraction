@@ -1,58 +1,99 @@
-version: '3.8'
+# docker-compose.yml
+# Refactored for faster builds and smaller images.
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      target: final-web-image # Specify the final stage for the web service
+    image: rag_fastapi-web:latest # Explicitly tag the image
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app/app
-      - ./evaluation:/app/evaluation
-      - ./logs:/app/logs
-      - ./.vector_store:/app/.vector_store
-      - ./.document_store:/app/.document_store
-      - sentence_transformer_cache:/root/.cache/torch/sentence_transformers # Add this line
-    env_file:
-      - ./.env
+      - ./app:/app/app # Mount app code for hot-reloading in development
+      - ./evaluation:/app/evaluation # Mount evaluation scripts
+      - ./logs:/app/logs # Mount logs directory
+      - ./.vector_store:/app/.vector_store # Mount vector store
+      - ./.document_store:/app/.document_store # Mount document store
+      - sentence_transformer_cache:/root/.cache/torch/sentence_transformers # Mount volume for ML models cache
+      - ./.env:/app/.env # Mount .env file for configuration
+    environment:
+      - IS_DOCKERIZED=true
+      - GEMINI_API_KEY=${GEMINI_API_KEY} # Explicitly pass API key
+      - REDIS_URL=redis://redis:6379/0 # Explicitly set for web service as well
+      - GEMINI_API_BASE=https://generativelanguage.googleapis.com/v1beta
+      - GEMINI_GENERATION_MODEL=gemini-2.5-flash
     depends_on:
-      - redis
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+      redis:
+        condition: service_healthy
+      worker:
+        condition: service_started
+    command: ["/wait/wait-for-redis.sh", "redis", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "debug"]
+    healthcheck: # Add healthcheck for web service
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
 
   worker:
-    build: .
-    command: ["/wait-for-redis.sh", "redis", "celery", "-A", "app.background.celery_worker.celery", "worker", "--loglevel=info"]
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      target: final-worker-image # Specify the final stage for the worker service
+    image: rag_fastapi-worker:latest # Explicitly tag the image
     volumes:
-      - ./app:/app/app
-      - ./evaluation:/app/evaluation
-      - ./logs:/app/logs
-      - ./.vector_store:/app/.vector_store
-      - ./.document_store:/app/.document_store
-      - sentence_transformer_cache:/root/.cache/torch/sentence_transformers # Add this line
-    env_file:
-      - ./.env
-    environment: # Added environment block
+      - ./app:/app/app # Mount app code
+      - ./evaluation:/app/evaluation # Mount evaluation scripts
+      - ./logs:/app/logs # Mount logs directory
+      - ./.vector_store:/app/.vector_store # Mount vector store
+      - ./.document_store:/app/.document_store # Mount document store
+      - sentence_transformer_cache:/root/.cache/torch/sentence_transformers # Mount volume for ML models cache
+      - ./.env:/app/.env # Mount .env file for configuration
+    environment:
+      - IS_DOCKERIZED=true
       - GEMINI_API_KEY=${GEMINI_API_KEY} # Explicitly pass API key
+      - REDIS_URL=redis://redis:6379/0 # Explicitly set for worker service
+      - GEMINI_API_BASE=https://generativelanguage.googleapis.com/v1beta
+      - GEMINI_GENERATION_MODEL=gemini-2.5-flash
     depends_on:
       - redis
+    command: ["/wait/wait-for-redis.sh", "redis", "celery", "-A", "app.background.celery_worker.celery", "worker", "--loglevel=info"]
+
 
   celery-beat:
-    build: .
-    command: celery -A app.background.celery_worker.celery beat -l info
-    env_file:
-      - ./.env
-    depends_on:
-      - redis
-    volumes: # ADDED: Volume mounts for code changes and logs
+    build:
+      context: .
+      dockerfile: Dockerfile.celery-beat
+      target: final-celery-beat-image # Specify the final stage for the celery-beat service
+    image: rag_fastapi-celery-beat:latest # Explicitly tag the image
+    volumes: # Mount app code and logs for consistency
       - ./app:/app/app
       - ./logs:/app/logs
+      - ./.env:/app/.env # Mount .env file for configuration
+    environment:
+      - IS_DOCKERIZED=true
+      - GEMINI_API_KEY=${GEMINI_API_KEY} # Explicitly pass API key
+      - REDIS_URL=redis://redis:6379/0 # Explicitly set for beat service
+      - GEMINI_API_BASE=https://generativelanguage.googleapis.com/v1beta
+      - GEMINI_GENERATION_MODEL=gemini-2.5-flash
+    depends_on:
+      - redis
+    command: celery -A app.background.celery_worker.celery beat -l info
 
   redis:
-    image: "redis:alpine"
+    image: "redis/redis-stack-server:latest" # Using redis-stack for search/json support
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck: # Add healthcheck for redis
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
 
 volumes:
   redis_data:
-  sentence_transformer_cache: # Add this line
+  sentence_transformer_cache:

@@ -25,7 +25,13 @@ class RedisJobService:
                 if not self._initialized:
                     try:
                         # Use the broker URL from Celery settings for consistency
-                        self._redis_client = redis.from_url(settings.CELERY_BROKER_URL, decode_responses=True)
+                        redis_url = os.getenv("REDIS_URL")
+                        if not redis_url:
+                            if os.getenv("IS_DOCKERIZED", "false").lower() == "true":
+                                redis_url = "redis://redis:6379/0"
+                            else:
+                                redis_url = "redis://localhost:6379/0"
+                        self._redis_client = redis.from_url(redis_url, decode_responses=True)
                         self._redis_client.ping()
                         logger.info("Connected to Redis successfully for JobService.")
                         self._initialized = True

@@ -4,14 +4,13 @@
         "expected_answer_keywords": [
             "Viaweb"
         ],
-        "response_answer": "An error occurred while generating the answer.",
+        "response_answer": "I cannot answer this question based on the provided information.",
         "confidence": "low",
         "citations_count": 0,
         "citation_urls": [],
-        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
+        "grounding_notes": "Abstained from answering due to insufficient context.",
         "evaluation_notes": [
-            "Missing expected keywords: Viaweb",
-            "Warning: Answer provided but no citations found."
+            "Missing expected keywords: Viaweb"
         ]
     },
     {
@@ -22,14 +21,17 @@
             "macros",
             "features faster"
         ],
-        "response_answer": "An error occurred while generating the answer.",
-        "confidence": "low",
-        "citations_count": 0,
-        "citation_urls": [],
-        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
+        "response_answer": "Viaweb's software was written primarily in a programming language called Lisp. It was considered powerful because it was a good language for writing software quickly, which magnified the effect of rapid development for server-based applications, allowing software to be released the minute it was done. This also potentially gave them a technological edge.",
+        "confidence": "high",
+        "citations_count": 2,
+        "citation_urls": [
+            "https://www.paulgraham.com/avg.html",
+            "https://www.paulgraham.com/lwba.html"
+        ],
+        "grounding_notes": "Answer generated strictly from retrieved context.",
         "evaluation_notes": [
-            "Missing expected keywords: Lisp, powerful, macros, features faster",
-            "Warning: Answer provided but no citations found."
+            "Missing expected keywords: macros, features faster",
+            "Found expected keywords: Lisp, powerful"
         ]
     },
     {
@@ -40,14 +42,16 @@
             "powerful",
             "perceive advantages"
         ],
-        "response_answer": "An error occurred while generating the answer.",
-        "confidence": "low",
-        "citations_count": 0,
-        "citation_urls": [],
-        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
+        "response_answer": "The Blub Paradox asks: What's so great about Lisp? And if Lisp is so great, why doesn't everyone use it? The answers are that Lisp is great because it is the most powerful language available, and the reason everyone doesn't use it is that programming languages are not merely technologies, but habits of mind, which change slowly.",
+        "confidence": "high",
+        "citations_count": 1,
+        "citation_urls": [
+            "https://www.paulgraham.com/avg.html"
+        ],
+        "grounding_notes": "Answer generated strictly from retrieved context.",
         "evaluation_notes": [
-            "Missing expected keywords: Blub paradox, languages, powerful, perceive advantages",
-            "Warning: Answer provided but no citations found."
+            "Missing expected keywords: perceive advantages",
+            "Found expected keywords: Blub paradox, languages, powerful"
         ]
     },
     {
@@ -59,14 +63,17 @@
             "competitors",
             "advantages"
         ],
-        "response_answer": "An error occurred while generating the answer.",
-        "confidence": "low",
-        "citations_count": 0,
-        "citation_urls": [],
-        "grounding_notes": "Error: object NoneType can't be used in 'await' expression",
+        "response_answer": "In a competitive situation, Lisp's power is multiplied by the fact that competitors don't understand it. This makes it an advantage for startups.",
+        "confidence": "high",
+        "citations_count": 2,
+        "citation_urls": [
+            "https://www.paulgraham.com/avg.html",
+            "https://www.paulgraham.com/quotes.html"
+        ],
+        "grounding_notes": "Answer generated strictly from retrieved context.",
         "evaluation_notes": [
-            "Missing expected keywords: secret weapon, startups, Lisp, competitors, advantages",
-            "Warning: Answer provided but no citations found."
+            "Missing expected keywords: secret weapon, advantages",
+            "Found expected keywords: startups, Lisp, competitors"
         ]
     }
 ]

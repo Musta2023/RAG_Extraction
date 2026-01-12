@@ -1,0 +1,28 @@
+# Dockerfile.base
+# This Dockerfile builds the base image for all services (web, worker, celery-beat).
+# It installs Python, system dependencies, and Python packages from requirements.txt.
+
+FROM python:3.11-slim-bookworm
+
+# Install system dependencies
+# netcat-openbsd is used by wait-for-redis.sh script
+# tini is a tiny but valid init for containers
+RUN apt-get update && \
+    apt-get -y install netcat-openbsd tini && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements.txt to leverage Docker cache
+COPY requirements.txt .
+
+# Install Python dependencies
+# --no-cache-dir: Disable the pip cache. This reduces the image size.
+# --upgrade pip: Ensure pip is up-to-date.
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Entrypoint for tini for proper signal handling
+ENTRYPOINT ["/usr/bin/tini", "--"]

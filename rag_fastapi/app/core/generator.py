@@ -1,74 +1,49 @@
 import logging
+import re
+import os
 from typing import List, Tuple, Dict, Any, Optional
 from abc import ABC, abstractmethod
+
+# Third-party imports
+try:
+    import google.generativeai as genai
+    import google.generativeai.types as types
+except ImportError:
+    genai = None
+    types = None
+
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
+# Internal project imports
 from app.config import settings
 from app.models.document import DocumentChunk
-from app.models.schemas import Citation
 
 logger = logging.getLogger(__name__)
 
-# --- Abstract Base Class for Generators ---
-
-class BaseGenerator(object):
+class BaseGenerator(ABC):
     """
     Abstract base class for all answer generation implementations.
     """
     def __init__(self):
-        # Placeholder for model initialization in concrete classes
         pass
 
-    def _format_context(self, retrieved_chunks: List[Tuple[float, DocumentChunk]]) -> str:
+    def _format_context(self, retrieved_chunks: List[Tuple[float, DocumentChunk]]) -> Tuple[str, Dict[int, str]]:
         """
         Formats the retrieved chunks into a string that can be used as context
-        for the LLM.
+        for the LLM, and creates a mapping from source number to URL for citation.
         """
         formatted_context = ""
+        source_map: Dict[int, str] = {}
         for i, (score, chunk) in enumerate(retrieved_chunks):
-            # Include score in context for LLM to potentially use for confidence
-            formatted_context += f"--- Source {i+1} (Score: {score:.2f}, URL: {chunk.document_url}) ---\n"
-            formatted_context += chunk.text_content + "\n\n"
-        return formatted_context.strip()
+            source_num = i + 1
+            formatted_context += f"[Source {source_num}] {chunk.text_content}\n\n"
+            source_map[source_num] = str(chunk.document_url)
+        return formatted_context.strip(), source_map
 
-    def _generate_citations(self, answer: str, retrieved_chunks: List[Tuple[float, DocumentChunk]]) -> List[Citation]:
-        """
-        Analyzes the generated answer and the retrieved chunks to identify and
-        create citations. This is a heuristic-based approach.
-        A more advanced implementation might use LLM to extract direct quotes and their sources.
-        """
-        citations = []
-        # Simple heuristic: if a chunk's content is implicitly used, cite it.
-        # This can be improved by checking for exact phrase matches or using LLM for citation extraction.
-        cited_urls = set()
-        for score, chunk in retrieved_chunks:
-            if str(chunk.document_url) not in cited_urls and any(word in answer for word in chunk.text_content.split()[:10]):
-                citations.append(Citation(
-                    url=chunk.document_url,
-                    title=chunk.document_title,
-                    chunk_id=chunk.chunk_id,
-                    quote=chunk.text_content[:100] + "..." if len(chunk.text_content) > 100 else chunk.text_content, # Short quote
-                    score=score
-                ))
-                cited_urls.add(str(chunk.document_url))
-        return citations
 
-    def _assess_confidence(self, retrieved_chunks: List[Tuple[float, DocumentChunk]]) -> str:
-        """
-        Assesses the confidence level based on the quality of retrieved chunks.
-        Heuristic: depends on the number and scores of the top-k chunks.
-        """
-        if not retrieved_chunks:
-            return "low"
-
-        top_scores = [score for score, _ in retrieved_chunks]
-        avg_top_score = sum(top_scores) / len(top_scores) if top_scores else 0.0
-
-        if avg_top_score > 0.8 and len(retrieved_chunks) >= 3:
-            return "high"
-        elif avg_top_score > 0.6 and len(retrieved_chunks) >= 1:
-            return "medium"
-        else:
-            return "low"
-    
     @abstractmethod
     async def generate_answer(
         self,
@@ -78,7 +53,6 @@ class BaseGenerator(object):
     ) -> Dict[str, Any]:
         """
         Generates an answer based on the question and retrieved chunks.
-        Must return answer, confidence, citations, and grounding_notes.
         """
         pass
 
@@ -89,13 +63,10 @@ class OpenAIGenerator(BaseGenerator):
     Answer generator using OpenAI's chat models.
     """
     def __init__(self):
-        try:
-            from openai import OpenAI
-        except ImportError:
-            raise ImportError(
-                "The 'openai' package is not installed. "
-                "Please install it with 'pip install openai'"
-            )
+        super().__init__()
+        if OpenAI is None:
+            raise ImportError("Please install 'openai' package.")
+        
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
         self.model = settings.OPENAI_GENERATION_MODEL
         logger.info(f"Initialized OpenAIGenerator with model: {self.model}")
@@ -108,83 +79,66 @@ class OpenAIGenerator(BaseGenerator):
     ) -> Dict[str, Any]:
         if not retrieved_chunks:
             return {
-                "answer": "I cannot answer this question as no relevant information was found.",
+                "answer": "I don't know based on the provided documents.",
                 "confidence": "low",
                 "citations": [],
                 "grounding_notes": "No relevant documents were retrieved."
             }
 
-        context = self._format_context(retrieved_chunks)
+        context, source_map = self._format_context(retrieved_chunks)
         
-        # Crafting a strong prompt for grounded generation
         system_prompt = (
-            "You are a helpful and honest assistant. Your task is to answer the user's question "
-            "STRICTLY based on the provided context. "
-            "If the answer is not available in the context, clearly state 'I cannot answer this question based on the provided information.' "
-            "Do not use any prior knowledge. "
-            "For each statement you make, explicitly refer to the source document by its number (e.g., [Source 1]). "
-            "Try to make the answer concise and to the point. "
-            "Ensure that every piece of information in your answer can be traced back to the context."
+            "You are a helpful and honest assistant. Answer STRICTLY based on the provided sources. "
+            "For each factual claim, cite the source number (e.g., [Source 1]). "
+            "If the answer is not in the sources, say 'I don't know based on the provided documents.' "
+            "Do not hallucinate."
         )
 
-        user_prompt = (
-            f"Context:\n{context}\n\n"
-            f"Question: {question}\n\n"
-            "Answer:"
-        )
+        user_prompt = f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"
 
         try:
+            # Note: OpenAI's SDK is technically synchronous here, but wrapped in async method
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                temperature=0.0, # Aim for factual, not creative
-                max_tokens=500 # Limit response length
+                temperature=0.0
             )
             answer_text = response.choices[0].message.content.strip()
+            citations = self._generate_citations(answer_text, source_map)
             
-            citations = self._generate_citations(answer_text, retrieved_chunks)
-            confidence = self._assess_confidence(retrieved_chunks)
-
             return {
                 "answer": answer_text,
-                "confidence": confidence,
+                "confidence": self._assess_confidence(citations),
                 "citations": citations,
-                "grounding_notes": "Answer generated from retrieved documents using OpenAI."
+                "grounding_notes": "Generated using OpenAI."
             }
         except Exception as e:
-            logger.error(f"Error generating answer with OpenAI for job {job_id}, question '{question}': {e}")
-            return {
-                "answer": "An error occurred while generating the answer.",
-                "confidence": "low",
-                "citations": [],
-                "grounding_notes": f"Error: {e}"
-            }
+            logger.error(f"OpenAI Error: {e}")
+            return {"answer": "Error generating answer.", "confidence": "low", "citations": [], "grounding_notes": str(e)}
 
 # --- Google Gemini Generator Implementation ---
 
 class GeminiGenerator(BaseGenerator):
     """
-    Answer generator using Google's Gemini chat models.
+    Answer generator using Google's Gemini models via google-generativeai.
     """
     def __init__(self):
-        try:
-            import google.genai as genai
-        except ImportError:
-            raise ImportError(
-                "The 'google-genai' package is not installed. "
-                "Please install it with 'pip install google-genai'"
-            )
-        self.genai = genai # Store the module for use in generate_answer
+        super().__init__()
+        if genai is None:
+            raise ImportError("Please install 'google-generativeai' package.")
+        
         self.api_key = settings.GEMINI_API_KEY
         self.model_name = settings.GEMINI_GENERATION_MODEL
 
         if not self.api_key or self.api_key == "your_gemini_api_key":
-            logger.error("Gemini API key is not set. Cannot initialize Gemini Generator.")
-            self.model_name = None # Set to None to prevent usage
+            logger.error("Gemini API key is not set.")
+            self.model_name = None
         else:
+            # IMPORTANT: Global configuration for google-generativeai
+            genai.configure(api_key=self.api_key)
             logger.info(f"Initialized GeminiGenerator with model: {self.model_name}")
 
     async def generate_answer(
@@ -193,84 +147,116 @@ class GeminiGenerator(BaseGenerator):
         retrieved_chunks: List[Tuple[float, DocumentChunk]],
         job_id: str
     ) -> Dict[str, Any]:
-        if not retrieved_chunks:
-            return {
-                "answer": "I cannot answer this question as no relevant information was found.",
-                "confidence": "low",
-                "citations": [],
-                "grounding_notes": "No relevant documents were retrieved."
-            }
-        
-        context = self._format_context(retrieved_chunks)
+        if not self.model_name:
+            return {"answer": "Gemini API key not configured.", "confidence": "low", "citations": [], "grounding_notes": "Missing key."}
 
-        # Gemini uses a slightly different message structure
-        messages = [
-            {"role": "user", "parts": [
-                "You are a helpful and honest assistant. Your task is to answer the user's question "
-                "STRICTLY based on the provided context. "
-                "If the answer is not available in the context, clearly state 'I cannot answer this question based on the provided information.' "
-                "Do not use any prior knowledge. "
-                "For each statement you make, explicitly refer to the source document by its number (e.g., [Source 1]). "
-                "Try to make the answer concise and to the point. "
-                "Ensure that every piece of information in your answer can be traced back to the context."
-            ]},
-            {"role": "model", "parts": ["Understood. I will provide answers strictly based on the context and cite my sources."]},
-            {"role": "user", "parts": [
-                f"Context:\n{context}\n\n"
-                f"Question: {question}\n\n"
-                "Answer:"
-            ]}
-        ]
+        if not retrieved_chunks:
+            return {"answer": "I don't know based on the provided documents.", "confidence": "low", "citations": [], "grounding_notes": "No docs."}
+        
+        context, source_map = self._format_context(retrieved_chunks)
+
+        system_instructions = (
+            "You are a strict Retrieval-Augmented Generation (RAG) assistant.\n"
+            "Use ONLY the provided Context.\n"
+            "Do NOT use prior knowledge.\n"
+            "If the answer is not explicitly present in the Context, respond exactly with:\n"
+            "\"I cannot answer this question based on the provided information.\"\n"
+            "Do NOT mention sources or citations.\n"
+            "Do NOT add explanations."
+        )
+
+        user_prompt_template = (
+            "Context:\n"
+            "{context}\n\n"
+            "Question:\n"
+            "{question}\n\n"
+            "Answer using ONLY the Context above."
+        )
+        user_prompt = user_prompt_template.format(context=context, question=question)
 
         try:
-            # Explicitly create client and close it in finally block
-            client = self.genai.Client(api_key=self.api_key)
-            try:
-                model_instance = client.get_model(self.model_name)
-                response = await model_instance.generate_content(messages, safety_settings={'HARASSMENT': 'BLOCK_NONE'})
-            finally:
-                await client.close()
+            model = genai.GenerativeModel(self.model_name)
             
+            response = await model.generate_content_async(
+                contents=[
+                    {"role": "user", "parts": [{"text": system_instructions}]},
+                    {"role": "model", "parts": [{"text": "Ok."}]},
+                    {"role": "user", "parts": [{"text": user_prompt}]},
+                ],
+                generation_config={"temperature": 0.0},
+                safety_settings=[]
+            )
             answer_text = response.text.strip()
             
-            citations = self._generate_citations(answer_text, retrieved_chunks)
-            confidence = self._assess_confidence(retrieved_chunks)
+            citations = []
+            confidence = "low" # Default to low
+            grounding_notes = "Answer generated strictly from retrieved context."
 
+            if answer_text == "I cannot answer this question based on the provided information.":
+                confidence = "low"
+                grounding_notes = "Abstained from answering due to insufficient context."
+            else:
+                # Programmatically attach citations: If an answer is given, we assume it comes from the retrieved chunks.
+                # Therefore, all retrieved chunks are considered sources.
+                unique_citations_with_snippets = {}
+                for score, chunk in retrieved_chunks:
+                    url = str(chunk.document_url)
+                    snippet_sentences = re.split(r'(?<=[.!?])\s+', chunk.text_content)
+                    snippet = " ".join(snippet_sentences[:3])
+                    if len(snippet_sentences) > 3:
+                        snippet += "..."
+                    
+                    if url not in unique_citations_with_snippets:
+                        unique_citations_with_snippets[url] = {"url": url, "snippets": [snippet]}
+                    else:
+                        if snippet not in unique_citations_with_snippets[url]["snippets"]:
+                            unique_citations_with_snippets[url]["snippets"].append(snippet)
+                
+                final_citations = []
+                for citation_entry in unique_citations_with_snippets.values():
+                    final_citations.append({
+                        "url": citation_entry["url"],
+                        "quote": " ".join(citation_entry["snippets"])
+                    })
+                
+                citations = final_citations
+                
+                if citations:
+                    confidence = "high"
+                else:
+                    # This case should ideally not happen if retrieved_chunks was not empty and an answer was given
+                    confidence = "low"
+                    grounding_notes += " Warning: No citations could be attached despite an answer being generated."
+            
             return {
                 "answer": answer_text,
                 "confidence": confidence,
                 "citations": citations,
-                "grounding_notes": "Answer generated from retrieved documents using Gemini."
+                "grounding_notes": grounding_notes
             }
         except Exception as e:
-            logger.error(f"Error generating answer with Gemini for job {job_id}, question '{question}': {e}")
-            return {
-                "answer": "An error occurred while generating the answer.",
-                "confidence": "low",
-                "citations": [],
-                "grounding_notes": f"Error: {e}"
-            }
+            logger.exception(f"Gemini Error for job {job_id}: ")
+            return {"answer": "An error occurred with Gemini.", "confidence": "low", "citations": [], "grounding_notes": str(e)}
 
 # --- Generator Factory ---
 
 class Generator:
     """
-    Factory class to provide the correct generator instance based on settings.
+    Factory class to provide the correct generator instance.
     """
     def __init__(self):
         self._generator_instance: Optional[BaseGenerator] = None
         self._initialize_generator()
 
     def _initialize_generator(self):
-        """Initializes the appropriate generator based on LLM_PROVIDER setting."""
         provider = settings.LLM_PROVIDER.lower()
         if provider == "openai":
             self._generator_instance = OpenAIGenerator()
         elif provider == "gemini":
             self._generator_instance = GeminiGenerator()
         else:
-            raise ValueError(f"Unsupported LLM_PROVIDER for generation: {settings.LLM_PROVIDER}")
-        logger.info(f"Active Generator: {provider}")
+            raise ValueError(f"Unsupported LLM_PROVIDER: {settings.LLM_PROVIDER}")
+        logger.info(f"Active Generator Provider: {provider}")
 
     async def generate_answer(
         self,
@@ -279,5 +265,6 @@ class Generator:
         job_id: str
     ) -> Dict[str, Any]:
         if not self._generator_instance:
-            self._initialize_generator() # Try to re-initialize if it somehow became None
+            self._initialize_generator()
         return await self._generator_instance.generate_answer(question, retrieved_chunks, job_id)
+

@@ -49,9 +49,9 @@ class Citation(BaseModel):
     """
     url: HttpUrl = Field(..., description="URL of the source document.")
     title: Optional[str] = Field(None, description="Title of the source document.")
-    chunk_id: str = Field(..., description="Identifier for the chunk within the document.")
-    quote: str = Field(..., description="The exact quote from the source that supports the answer.")
-    score: float = Field(..., description="Relevance score of the citation to the question.")
+    chunk_id: Optional[str] = Field(None, description="Identifier for the chunk within the document.")
+    quote: Optional[str] = Field(None, description="The exact quote from the source that supports the answer.")
+    score: Optional[float] = Field(None, description="Relevance score of the citation to the question.")
 
 class AskRequest(BaseModel):
     """
@@ -89,6 +89,9 @@ class JobStatusResponse(BaseModel):
     """
     job_id: str = Field(..., description="Unique identifier for the ingestion job.")
     status: str = Field(..., description="Current status of the job (e.g., 'pending', 'in_progress', 'completed', 'failed').")
+    started_at: datetime = Field(..., description="Timestamp when the job was started.")
+    completed_at: Optional[datetime] = Field(None, description="Timestamp when the job was completed, if applicable.")
+    user_notes: Optional[str] = Field(None, description="Optional notes from the user about this ingestion job.")
     last_heartbeat: datetime = Field(..., description="Last timestamp when the job reported activity.")
     pages_fetched: int = Field(0, description="Number of pages successfully fetched.")
     pages_indexed: int = Field(0, description="Number of pages successfully indexed.")

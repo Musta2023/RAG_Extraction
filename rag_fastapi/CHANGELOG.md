@@ -29,7 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Structured JSON logging.
     - Basic API rate limiting.
 - **Documentation**:
-    - `README.md` with setup and usage instructions.
+    - `README.md` with setup 
+    
+    
+    and usage instructions.
     - `design_note.md` explaining architectural choices.
 - **Testing**:
     - Initial unit tests for API endpoints and core components.

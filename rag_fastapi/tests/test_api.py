@@ -1,24 +1,33 @@
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock # Added AsyncMock
 from datetime import datetime, timedelta
 from app.main import app
 from app.services import redis_job_service as job_service
 from app.models.job import IngestionJob
 from app.models.schemas import AskRequest, IngestRequest, Citation
 from app.config import settings
-
-# Override settings for testing if necessary
-settings.CELERY_BROKER_URL = "redis://localhost:6379/0" # Use a local Redis for tests
+import json # Added import
 
 client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def clear_job_service():
-    """Clear jobs before each test."""
-    job_service._jobs = {}
-    job_service._save_jobs_to_file()
+    """Clear jobs before each test by deleting them from Redis."""
+    # Ensure RedisJobService is initialized and has a client
+    if job_service._redis_client is None:
+        job_service.__init__() 
+
+    # Delete all keys matching the job prefix
+    job_keys = list(job_service._redis_client.scan_iter("ingestion_job:*"))
+    if job_keys:
+        job_service._redis_client.delete(*job_keys)
     yield
+    # Clean up after test if necessary, though autouse usually handles setup.
+    # We re-clear to ensure a clean state for subsequent test runs if not all tests use the autouse fixture.
+    job_keys_after = list(job_service._redis_client.scan_iter("ingestion_job:*"))
+    if job_keys_after:
+        job_service._redis_client.delete(*job_keys_after)
 
 @pytest.fixture
 def mock_ingestion_task():
@@ -67,9 +76,10 @@ def test_ingest_content_success(mock_ingestion_task):
     assert job.config["max_pages"] == 1
     
     # Verify Celery task was called
+    expected_args = json.loads(IngestRequest(**test_request_payload).model_dump_json())
     mock_ingestion_task.delay.assert_called_once_with(
         response_json["job_id"],
-        IngestRequest(**test_request_payload).model_dump()
+        expected_args
     )
 
 def test_get_job_status_pending():
@@ -151,8 +161,8 @@ def test_ask_question_job_not_completed():
     assert "not completed yet" in response.json()["detail"].lower()
 
 @patch("app.api.routers.ask.retriever")
-@patch("app.api.routers.ask.generator")
-def test_ask_question_success(mock_generator, mock_retriever):
+@patch("app.api.routers.ask.generator.generate_answer") # Patch the method directly
+def test_ask_question_success(mock_generate_answer, mock_retriever):
     """Test POST /ask successfully returns an answer."""
     job_id = "test_completed_job_for_ask"
     test_job = IngestionJob(job_id=job_id, status="completed", started_at=datetime.utcnow(), completed_at=datetime.utcnow())
@@ -161,12 +171,11 @@ def test_ask_question_success(mock_generator, mock_retriever):
     mock_retriever.retrieve_chunks.return_value = [
                     (0.1, MagicMock(spec=Citation, document_url="http://src1.com", text_content="Source 1 content")),        (0.2, MagicMock(spec=Citation, document_url="http://src2.com", text_content="Source 2 content"))
     ]
-    mock_generator.generate_answer.return_value = {
+    mock_generate_answer.return_value = {
         "answer": "The answer is from source 1 [Source 1].",
         "confidence": "high",
-                    "citations": [
-                        {"url": "http://src1.com", "title": "Source 1", "chunk_id": "chunk1", "quote": "Source 1 content...", "score": 0.1}
-                    ],        "grounding_notes": "Generated from 1 source."
+        "citations": ["http://src1.com"], # Updated to List[str]
+        "grounding_notes": "Generated from 1 source."
     }
 
     ask_payload = {"job_id": job_id, "question": "What is the answer?"}
@@ -177,8 +186,8 @@ def test_ask_question_success(mock_generator, mock_retriever):
     assert response_json["answer"] == "The answer is from source 1 [Source 1]."
     assert response_json["confidence"] == "high"
     assert len(response_json["citations"]) == 1
-    assert response_json["citations"][0]["url"] == "http://src1.com/"
+    assert response_json["citations"][0] == "http://src1.com" # Changed from .url to direct string
     assert response_json["grounding_notes"] == "Generated from 1 source."
 
     mock_retriever.retrieve_chunks.assert_called_once_with(job_id, "What is the answer?", k=settings.RETRIEVER_TOP_K)
-    mock_generator.generate_answer.assert_called_once()
+    mock_generate_answer.assert_called_once()

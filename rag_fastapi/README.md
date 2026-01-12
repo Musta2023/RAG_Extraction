@@ -187,4 +187,45 @@ To run the unit tests, use `pytest`:
 
 ```bash
 pytest
+=========================================================================================
+Sending ingest request to http://localhost:8000/api/ingest with payload: {'seed_urls':                                                                   │
+│ ['https://www.goodreads.com/quotes/tag/imagination?author=Albert-Einstein'], 'domain_allowlist': ['goodreads.com'], 'max_pages': 1, 'max_depth': 0,      │
+│ 'user_notes': 'Test for Albert Einstein quotes'}                                                                                                         │
+│ Ingest job started with ID: dd090e31-a640-47d8-a60a-9ecb28526e69                                                                                         │
+│ Polling job status at http://localhost:8000/api/status/dd090e31-a640-47d8-a60a-9ecb28526e69...                                                           │
+│ Job dd090e31-a640-47d8-a60a-9ecb28526e69 status: pending                                                                                                 │
+│ Job dd090e31-a640-47d8-a60a-9ecb28526e69 status: crawling                                                                                                │
+│ Job dd090e31-a640-47d8-a60a-9ecb28526e69 status: completed                                                                                               │
+│ Ingestion job dd090e31-a640-47d8-a60a-9ecb28526e69 completed.                                                                                            │
+│ Sending ask request to http://localhost:8000/api/ask with payload: {'job_id': 'dd090e31-a640-47d8-a60a-9ecb28526e69', 'question': 'What did Albert       │
+│ Einstein say about imagination?'}                                                                                                                        │
+│ Ask response: {                                                                                                                                          │
+│   "answer": "Albert Einstein said:\n\u201cLogic will get you from A to Z; imagination will get you everywhere.\u201d\n\"It is the preview of life's      │
+│ coming attractions.\u201d",                                                                                                                              │
+│   "confidence": "high",                                                                                                                                  │
+│   "citations": [                                                                                                                                         │
+│     {                                                                                                                                                    │
+│       "url": "https://www.goodreads.com/quotes/tag/imagination?author=Albert-Einstein",                                                                  │
+│       "title": null,                                                                                                                                     │
+│       "chunk_id": null,                                                                                                                                  │
+│       "quote": "\u201cEverything you can imagine is real.\u201d \u2015 Pablo Picasso \u201cLogic will get you from A to Z; imagination will get you      │
+│ everywhere.\u201d \u2015 Albert Einstein \u201cAnyone who lives within their means suffers from a lack of imagination.\u201d \u2015 Oscar Wilde          │
+│ \u201cYou never have to change anything you got up in the middle of the night to write.\u201d \u2015 Saul Bellow \u201cStories of imagination tend to    │
+│ upset those without one.\u201d \u2015 Terry Pratchett \u201cIf you are a dreamer come in If you are a dreamer a wisher a liar A hoper a pray-er a It is  │
+│ the preview of life's coming attractions.\u201d \u2015 Albert Einstein \u201cOur imagination flies -- we are its shadow on the earth.\u201d \u2015       │
+│ Vladimir Nabokov \u201cImagination does not become great until human beings, given the courage and the strength, use it to create.\u201d \u2015 Maria    │
+│ Montessori \u201cVision is the art of seeing things invisible.\u201d \u2015 Jonathan Swift \u201cImagination is the golden-eyed monster that never       │
+│ sleeps. It must be fed; it cannot be ignored.\u201d \u2015 Patricia A. I found out that the more I wrote, the bigger it got.\u201d \u2015 Philip         │
+│ Jos\u00e9 Farmer \u201cImagination is everything. Ballard \u201cImagination is the only weapon in the war against reality.\u201d \u2015 Lewis Carroll    │
+│ \u201cThere are painters who transform the sun to a yellow spot, but there are others who with the help of their art and their intelligence, transform a │
+│ yellow spot into sun\u201d \u2015 Pablo Picasso \u201cImagination will often carry us to worlds that never were, but without it we go nowhere.\u201d     │
+│ \u2015 Carl Sagan \u201cA fit, healthy body\u2014that is the best fashion statement\u201d \u2015 Jess C Scott McKillip \u201cI believe in the power of   │
+│ the imagination to remake the world, to release the truth within us, to hold back the night, to transcend death, to charm motorways, to ingratiate       │
+│ ourselves with birds, to enlist the confidences of madmen.\u201d \u2015 J.G.",                                                                           │
+│       "score": null                                                                                                                                      │
+│     }                                                                                                                                                    │
+│   ],                                                                                                                                                     │
+│   "grounding_notes": "Answer generated strictly from retrieved context."                                                                                 │
+│ }                                                                                                                                                        │
+│ RAG pipeline end-to-end test passed successfully!  
 ```

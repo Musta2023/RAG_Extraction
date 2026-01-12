@@ -25,7 +25,7 @@ html5lib
 sentence-transformers # For local embeddings
 ctransformers # For local generation
 openai
-google-genai
+google-generativeai
 
 # Vector Store
 faiss-cpu # For CPU-based FAISS. For GPU, use faiss-gpu

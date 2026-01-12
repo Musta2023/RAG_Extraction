@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     # Gemini
     GEMINI_API_KEY: str = "your_gemini_api_key"
     GEMINI_EMBEDDING_MODEL: str = "models/embedding-001"
-    GEMINI_GENERATION_MODEL: str = "models/gemini-pro"
+    GEMINI_GENERATION_MODEL: str = "gemini-1.5-flash"
 
     # Local SentenceTransformer
     LOCAL_EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"

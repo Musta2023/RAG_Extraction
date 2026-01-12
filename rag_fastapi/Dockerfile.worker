@@ -1,0 +1,38 @@
+# Dockerfile.worker
+# This Dockerfile builds the image for the Celery worker service using a multi-stage build.
+
+# --- Stage 1: Base Image Build (from Dockerfile.base) ---
+FROM python:3.11-slim-bookworm AS builder
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get -y install netcat-openbsd tini && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements.txt to leverage Docker cache
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Entrypoint for tini for proper signal handling (will be overridden by final stage CMD)
+# ENTRYPOINT ["/usr/bin/tini", "--"]
+
+
+# --- Stage 2: Final Worker Service Image ---
+FROM builder AS final-worker-image
+
+# Copy application code and relevant assets from the context
+COPY app /app/app
+
+# Copy wait-for-redis.sh script and make it executable
+COPY scripts/wait-for-redis.sh /wait/wait-for-redis.sh
+RUN chmod +x /wait/wait-for-redis.sh
+
+# Command to run the worker service (this will be overridden by docker-compose.yml)
+# CMD ["/wait/wait-for-redis.sh", "redis", "celery", "-A", "app.background.celery_worker.celery", "worker", "--loglevel=info"]
